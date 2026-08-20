@@ -1,0 +1,654 @@
+.app-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    height: 100%;
+}
+
+.sidebar {
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Below ~700px the fixed 340px sidebar leaves too little room for the map (and the map's own
+   floating controls start to collide). Stack sidebar above map instead of trying to shrink the
+   two-column grid down to nothing. */
+@media (max-width: 768px) {
+    .app-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 45vh) minmax(280px, 1fr);
+        height: 100%;
+    }
+
+    .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 14px;
+    }
+
+    .map-container {
+        min-height: 280px;
+    }
+
+    /* Five tabs at full padding don't fit a narrow map width; let them wrap instead of
+       overflowing past the edge of the map. */
+    .view-toggle {
+        flex-wrap: wrap;
+        max-width: calc(100vw - 20px);
+    }
+}
+
+.sidebar h1 {
+    font-size: 20px;
+    margin: 0 0 20px;
+}
+
+.map-container {
+    position: relative;
+}
+
+/* Above the eclipse picker, full width like it: the first control in the sidebar, so someone who
+   lands on a language they can't read finds it without having to read anything first. */
+.lang-switcher {
+    margin-bottom: 12px;
+}
+
+.eclipse-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 20px;
+}
+
+.eclipse-selector label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+}
+
+.eclipse-selector select {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+}
+
+.panel {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: 4px;
+}
+
+.panel h2 {
+    font-size: 18px;
+    margin: 0 0 12px;
+}
+
+.panel h3 {
+    font-size: 14px;
+    margin: 20px 0 8px;
+    color: var(--text-muted);
+}
+
+.panel-error {
+    color: #e53e3e;
+}
+
+.panel dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 12px;
+    margin: 0;
+    font-size: 13px;
+}
+
+.panel dt {
+    color: var(--text-muted);
+}
+
+.panel dd {
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.panel .hint {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.panel .hint a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.panel .hint a:hover {
+    text-decoration: underline;
+}
+
+.horizon-chart {
+    margin-top: 8px;
+}
+
+.horizon-chart-tooltip {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.seasonal-chart {
+    margin-top: 6px;
+}
+
+.visibility-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-top: 4px;
+}
+
+.visibility-badge.ok {
+    background: rgba(12, 163, 12, 0.15);
+    color: #0ca30c;
+}
+
+.visibility-badge.blocked {
+    background: rgba(208, 59, 59, 0.15);
+    color: #d03b3b;
+}
+
+.visibility-badge.warning {
+    background: rgba(250, 178, 25, 0.2);
+    color: #9a6a00;
+}
+
+.day-window-toggle {
+    display: inline-flex;
+    gap: 2px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2px;
+    margin: 4px 0;
+}
+
+.day-window-toggle button {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.day-window-toggle button.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+.view-toggle {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    display: flex;
+    gap: 2px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.view-toggle button {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.view-toggle button.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+.view-toggle button:disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+.export-control {
+    position: absolute;
+    top: 10px;
+    /* Clear of MapLibre's own zoom/compass control, which it always mounts at top-right: at
+       right:10px this button sat directly on top of it and swallowed the zoom clicks. */
+    right: 52px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.export-button {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.export-button:disabled {
+    cursor: default;
+    opacity: 0.7;
+}
+
+.export-progress {
+    width: min(220px, calc(100vw - 24px));
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.export-progress-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+}
+
+.export-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.2s ease;
+}
+
+.export-progress-label {
+    margin-top: 5px;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+}
+
+.export-error {
+    width: min(220px, calc(100vw - 24px));
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11px;
+    color: #c53030;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.export-warning {
+    width: min(220px, calc(100vw - 24px));
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11px;
+    color: #b7791f;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.scene3d-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.scene3d-hint {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(20, 20, 24, 0.5);
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+/* Centred over the (necessarily dark) scene rather than tucked in a corner: it is explaining why
+   the frame looks empty, so it has to be where the eye already is. */
+.scene3d-below-horizon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 340px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.88);
+    background: rgba(20, 20, 24, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 10px 14px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.scene3d-time-control {
+    position: absolute;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    width: min(500px, 80%);
+    background: rgba(20, 20, 24, 0.72);
+    backdrop-filter: blur(4px);
+    border-radius: 10px;
+    padding: 10px 16px;
+    color: #fff;
+}
+
+.scene3d-time-readout {
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.scene3d-time-control input[type='range'] {
+    width: 100%;
+}
+
+.obstruction-hint {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    pointer-events: none;
+    background: rgba(20, 20, 24, 0.78);
+    color: #fff;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+.obstruction-loading {
+    position: absolute;
+    /* Under the view-toggle on the left, not top-right: that corner already holds the zoom
+       control and the export button (whose progress panel drops down below it), and the grid
+       recomputes precisely while an export is running, so the two used to overlap. */
+    top: 52px;
+    left: 10px;
+    z-index: 5;
+    background: rgba(20, 20, 24, 0.78);
+    color: #fff;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.obstruction-legend {
+    position: absolute;
+    left: 14px;
+    bottom: 20px;
+    z-index: 5;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    width: min(140px, calc(100vw - 28px));
+}
+
+.obstruction-legend-bands {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.obstruction-legend-band {
+    flex: 1;
+}
+
+.obstruction-legend-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.obstruction-legend-note {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    text-align: center;
+}
+
+/* Compact variant of .day-window-toggle, sized to sit inside the map legend box rather than in
+   the sidebar — the legend is where the score's formula is explained, so the switch that changes
+   that formula belongs next to it. */
+.focus-duration-toggle {
+    display: flex;
+    gap: 2px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+
+.focus-duration-toggle button {
+    flex: 1;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 9px;
+    padding: 3px 2px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.focus-duration-toggle button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.focus-point-score {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.focus-point-score-message {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.focus-point-score-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+}
+
+.focus-point-score-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text);
+}
+
+.focus-point-score-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.pin-button,
+.best-points-search {
+    display: block;
+    width: 100%;
+    margin: 6px 0 10px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.pin-button:hover:not(:disabled),
+.best-points-search:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.pin-button:disabled {
+    color: var(--text-muted);
+    cursor: default;
+}
+
+.comparison-row {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+}
+
+.comparison-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 4px;
+}
+
+.comparison-remove {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.comparison-remove:hover {
+    color: #e53e3e;
+}
+
+.comparison-row-stats {
+    font-size: 12px;
+}
+
+.best-points-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.best-points-list button {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    padding: 6px 8px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.best-points-list button:hover {
+    border-color: var(--accent);
+}
+
+.best-points-rank {
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+/* Legend for the lunar visibility shading on the 2D map. Mirrors .obstruction-legend's placement
+   and framing, but describes a "how much do you lose" ramp rather than a value scale. */
+.lunar-legend {
+    position: absolute;
+    left: 14px;
+    bottom: 20px;
+    z-index: 5;
+    width: min(210px, calc(100vw - 28px));
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.lunar-legend-scale {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.lunar-legend-swatch {
+    flex: 1;
+}
+
+.lunar-legend-clear {
+    background: transparent;
+}
+
+.lunar-legend-mid {
+    background: rgba(30, 42, 68, 0.3);
+}
+
+.lunar-legend-dark {
+    background: rgba(30, 42, 68, 0.62);
+}
+
+.lunar-legend-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.lunar-legend-note {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin: 6px 0 0;
+    line-height: 1.35;
+}
