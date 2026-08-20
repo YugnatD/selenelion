@@ -323,7 +323,9 @@
 
 .scene3d-hint {
     position: absolute;
-    top: 14px;
+    /* Below the export button, not beside it: both were pinned to the top-right corner and the
+       hint ran underneath the button, each cutting off the other's text. */
+    top: 52px;
     right: 14px;
     font-size: 11px;
     color: rgba(255, 255, 255, 0.75);

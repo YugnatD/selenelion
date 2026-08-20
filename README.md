@@ -1,6 +1,8 @@
 # Selenelion
 
-Plan **where to stand** for a solar or lunar eclipse.
+**Plan where to stand for a solar or lunar eclipse.**
+
+![Selenelion — the 2026-08-12 total eclipse over northern Spain, with local circumstances for a point in the Cantabrian Mountains](docs/screenshots/overview.jpg)
 
 A *selenelion* is the rare sight of an eclipsed Moon and the Sun at once, each just above an
 opposite horizon — possible only because refraction lifts both bodies slightly above where the
@@ -26,6 +28,34 @@ real world you would be standing in:
   vector contours.
 
 Fully static: no backend, no accounts, no API keys. English by default, French available.
+
+## The views
+
+All screenshots: the 2026-08-12 total eclipse over the Picos de Europa, northern Spain — a
+sunset eclipse, so the Sun sits only ~10° up at totality and the terrain matters enormously.
+
+| Obstruction | Quality |
+| :-- | :-- |
+| ![Terrain obstruction over the Picos de Europa: valleys in dark purple where ridges hide the eclipse, plateaus in orange where the horizon is clear](docs/screenshots/obstruction.jpg) | ![Composite quality score combining terrain, cloud climatology and duration at totality](docs/screenshots/quality.jpg) |
+| How much of the eclipse clears the real horizon, cell by cell. Dark = a ridge is in the way. | Terrain × weather × duration at totality, in one number per cell. |
+
+| Weather | 3D view |
+| :-- | :-- |
+| ![Cloud-cover climatology from 23 years of ERA5 reanalysis, as a contour overlay](docs/screenshots/weather.jpg) | ![The eclipsed Sun at totality above the Cantabrian ridgeline, rendered in Three.js](docs/screenshots/scene3d.jpg) |
+| Odds of clear sky at that place, that time of year — 23 years of ERA5. | The sky from the observer's eye, scrubable through the whole eclipse. |
+
+<img src="docs/screenshots/horizon.png" alt="Circumstances panel: contact times, a green 'Central phase clear of the terrain' badge, and the horizon chart showing the Sun's track crossing the terrain profile" width="420" align="right">
+
+**The horizon chart** is where it comes together. The blue area is the real skyline in the
+direction the eclipse happens; the orange line is the Sun's track through it. Where the orange
+line drops below the blue, the eclipse is happening behind a mountain.
+
+Here, at 43.179°N 5.229°W, 86m 24s of the 109m 22s eclipse clears the terrain, and totality
+itself — 20:27:20 to 20:29:05 — clears the ridge with a few degrees to spare. The PeakFinder
+link opens the same spot in a named-peak panorama, to check the answer against someone else's data.
+
+<br clear="all">
+
 
 ## Getting started
 
