@@ -16,6 +16,7 @@ import {
     NO_DATA,
     POINTS_PER_TILE,
     bilinearBlend,
+    climatologyBaseUrl,
     createTileFetcher,
     dayOfYearSlot,
     daySlotsForWindow,
@@ -30,7 +31,7 @@ export const CLIMATOLOGY_BASELINE_LABEL = 'ERA5, 2001-2023';
 // 584 KB per tile (40×40 points × 365 day slots), so 128 entries ≈ 75 MB — generous enough that
 // ordinary panning of the WeatherMap grid (which loads every tile covering the viewport, plus a
 // one-tile ring) keeps working out of cache, while still bounding a long session.
-const fetchTile = createTileFetcher('/climatology', 128);
+const fetchTile = createTileFetcher(climatologyBaseUrl('/climatology'), 128);
 
 /** Cloud cover (%) at the exact native grid point (latIdx, lonIdx), averaged over `days` (skipping
  *  any no-data slots), or null if that cell has no data at all in the window or its tile failed

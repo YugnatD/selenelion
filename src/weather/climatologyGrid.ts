@@ -111,6 +111,17 @@ export function tileKey(lonTile: number, latTile: number): string {
     return `${lonTile}_${latTile}`;
 }
 
+/** Prefixes a same-origin tile path (`/climatology`, `/climatology-hourly`) with
+ *  `VITE_CLIMATOLOGY_BASE_URL` when set, so the ~800MB tile set can be hosted separately from the
+ *  app bundle (e.g. an R2/S3 bucket behind its own CDN) instead of shipping through the same
+ *  git-based deploy as the rest of the site. Unset (the default) reproduces today's behaviour
+ *  exactly: a plain relative path, served from wherever the app itself is hosted. The env var
+ *  must be a full origin with no trailing slash, e.g. `https://climatology.example.com`. */
+export function climatologyBaseUrl(path: string): string {
+    const base = import.meta.env.VITE_CLIMATOLOGY_BASE_URL ?? '';
+    return `${base}${path}`;
+}
+
 /** A tile fetcher+cache bound to one tile set's URL prefix (e.g. `/climatology` or
  *  `/climatology-hourly`) — each tile set gets its own cache instance so the two don't collide
  *  or evict each other.

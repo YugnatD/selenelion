@@ -24,8 +24,8 @@ real world you would be standing in:
 - **Quality score** — terrain × weather × duration-at-totality combined into one map, to answer
   "of the places I could reach, which is actually best?".
 - **3D view** — the terrain and the eclipsed body from the observer's eye, in Three.js.
-- **PDF export** — every map view at a much finer grid resolution than the interactive one, as
-  vector contours.
+- **PDF export** — every map view at a much finer grid resolution than the interactive one,
+  captured straight from the map itself so borders and labels composite correctly under the data.
 
 Fully static: no backend, no accounts, no API keys. English by default, French available.
 
@@ -77,6 +77,23 @@ npm run build:climatology
 
 Everything else (eclipse computation, maps, terrain obstruction, 3D, PDF export) works without
 them; only the weather views stay empty.
+
+## Deployment
+
+Fully static — any static host works. The one thing to plan for is the ~800 MB of climatology
+tiles: they're gitignored, so a git-based deploy (Cloudflare Pages, Vercel, Netlify, ...) only
+ever sees the app bundle, never the tile data. Two ways to handle that:
+
+- **Same host** (simplest): upload `public/climatology` and `public/climatology-hourly` to the
+  host's static output directly (outside git — e.g. `wrangler pages deploy dist/` after copying
+  the tiles into `dist/` locally, or an equivalent direct-upload step for your host). Works as
+  long as the host doesn't cap total deployment size below ~800 MB.
+- **Separate host** (recommended for the tiles specifically, since they're large, static, and
+  reads-only): put them in an object store with its own CDN — e.g. Cloudflare R2, which has no
+  egress fees. Set `VITE_CLIMATOLOGY_BASE_URL` to that bucket's public URL (no trailing slash,
+  e.g. `https://climatology.example.com`) as a build-time env var; unset, the app fetches tiles
+  from its own origin exactly as it does in dev. The bucket needs a CORS policy allowing `GET`
+  from the app's domain, since this is now a cross-origin fetch.
 
 ## Scripts
 

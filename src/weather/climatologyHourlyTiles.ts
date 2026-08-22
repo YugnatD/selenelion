@@ -14,6 +14,7 @@ import {
     NO_DATA,
     POINTS_PER_TILE,
     bilinearBlend,
+    climatologyBaseUrl,
     createTileFetcher,
     dayOfYearSlot,
     daySlotsForWindow,
@@ -30,7 +31,7 @@ const HOURLY_SLOTS = HOURLY_DAY_GROUPS * BUCKETS_PER_DAY; // 444 — see HOURLY_
 // 0.69 MB per tile (40×40 points × 444 group-bucket slots) once the year is grouped into 10-day
 // periods — comparable to the daily set, so the cache can hold far more than the 12 entries that
 // 7 MB tiles allowed. 96 entries is roughly a 66 MB budget.
-const fetchTile = createTileFetcher('/climatology-hourly', 96);
+const fetchTile = createTileFetcher(climatologyBaseUrl('/climatology-hourly'), 96);
 
 /** Which 2-hour bucket (0-11) a date's UTC hour falls into. Exported so UI code can compute the
  *  same bucket index as this module (e.g. to label which hour range is actually being used). */
