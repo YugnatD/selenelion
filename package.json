@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "node scripts/copyMaplibreWorker.mjs && tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc -b --noEmit",
-    "build:climatology": "tsx scripts/buildClimatologyCombinedTiles.ts"
+    "build:climatology": "tsx scripts/buildClimatologyCombinedTiles.ts",
+    "postinstall": "node scripts/copyMaplibreWorker.mjs"
   },
   "dependencies": {
     "@astronomy-bundle/core": "^9.38.0",
